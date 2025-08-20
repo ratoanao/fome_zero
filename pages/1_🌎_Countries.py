@@ -80,7 +80,7 @@ def rename_columns(df1):
 
 # Subindo os dados e analisando previamente
 
-df = pd.read_csv('dashboard_fome_zero/data/zomato.csv')
+df = pd.read_csv('data/zomato.csv')
 df1 = df.copy()
 
 
@@ -203,3 +203,4 @@ with col2:
     )
 
     st.plotly_chart(fig)
+
