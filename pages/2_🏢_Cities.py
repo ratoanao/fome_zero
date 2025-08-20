@@ -79,7 +79,7 @@ def rename_columns(df1):
 
 # Subindo os dados e analisando previamente
 
-df = pd.read_csv('dashboard_fome_zero\data\zomato.csv')
+df = pd.read_csv('dashboard_fome_zero/data/zomato.csv')
 df1 = df.copy()
 
 
@@ -199,4 +199,5 @@ fig = px.bar(
     labels = {'city':'Cidades','cuisines':'Tipos de culinárias distintas'},
     color = 'city'
 )
+
 st.plotly_chart(fig)
