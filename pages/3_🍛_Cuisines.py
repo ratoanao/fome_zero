@@ -79,7 +79,7 @@ def rename_columns(df1):
 
 # Subindo os dados e analisando previamente
 
-df = pd.read_csv('dashboard_fome_zero\data\zomato.csv')
+df = pd.read_csv('dashboard_fome_zero/data/zomato.csv')
 df1 = df.copy()
 
 
@@ -291,4 +291,5 @@ with col2:
         labels = {'cuisines':'Tipos de culinárias','aggregate_rating':'Média de avaliação média'},
         color = 'cuisines'
     )
+
     st.plotly_chart(fig)
