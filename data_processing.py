@@ -1,6 +1,7 @@
 import inflection
 import pandas as pd
 import streamlit as st
+from PIL import Image
 
 
 COUNTRIES = {
@@ -21,33 +22,9 @@ COUNTRIES = {
     216: "United States of America",
 }
 
-COLORS = {
-    "3F7E00": "darkgreen",
-    "5BA829": "green",
-    "9ACD32": "lightgreen",
-    "CDD614": "orange",
-    "FFBA00": "red",
-    "CBCBC8": "darkred",
-    "FF7800": "darkred",
-}
-
 
 def country_name(country_id):
     return COUNTRIES.get(country_id, "Unknown")
-
-
-def create_price_type(price_range):
-    if price_range == 1:
-        return "cheap"
-    if price_range == 2:
-        return "normal"
-    if price_range == 3:
-        return "expensive"
-    return "gourmet"
-
-
-def color_name(color_code):
-    return COLORS.get(color_code, "unknown")
 
 
 def rename_columns(df):
@@ -71,11 +48,28 @@ def load_data(path="data/zomato.csv"):
     df = rename_columns(df)
 
     df["country"] = df["country_code"].apply(country_name)
-    df["price_type"] = df["price_range"].apply(create_price_type)
-    df["color_name"] = df["rating_color"].apply(color_name)
 
     df = df[df["cuisines"].notna()].copy()
     df["cuisines"] = df["cuisines"].apply(lambda x: x.split(",")[0])
     df = df.drop_duplicates(subset="restaurant_id", keep="first")
 
     return df
+
+
+def render_sidebar_logo(path="logo.png", width=120):
+    image = Image.open(path)
+    st.sidebar.image(image, width=width)
+
+
+def country_multiselect(df):
+    st.sidebar.markdown("# Filtros")
+    return st.sidebar.multiselect(
+        "Escolha os países que deseja visualizar as informações",
+        sorted(df["country"].unique()),
+    )
+
+
+def filter_by_countries(df, paises):
+    if paises:
+        return df[df["country"].isin(paises)].copy()
+    return df.copy()

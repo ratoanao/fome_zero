@@ -1,8 +1,12 @@
 import plotly.express as px
 import streamlit as st
-from PIL import Image
 
-from data_processing import load_data
+from data_processing import (
+    country_multiselect,
+    filter_by_countries,
+    load_data,
+    render_sidebar_logo,
+)
 
 
 st.set_page_config(page_title="Cuisines", page_icon="🍛", layout="wide")
@@ -45,15 +49,8 @@ def cuisine_metric(column, cuisine_label, cuisine_name):
 # Barra lateral no Streamlit
 # ============================================================
 
-image = Image.open("logo.png")
-st.sidebar.image(image, width=120)
-
-st.sidebar.markdown("# Filtros")
-
-paises = st.sidebar.multiselect(
-    "Escolha os países que deseja visualizar as informações",
-    sorted(df1["country"].unique()),
-)
+render_sidebar_logo()
+paises = country_multiselect(df1)
 
 num_restaurantes = st.sidebar.slider(
     label="Selecione a quantidade de restaurantes que deseja visualizar",
@@ -63,10 +60,7 @@ num_restaurantes = st.sidebar.slider(
     step=1,
 )
 
-df_filtrado = df1.copy()
-
-if paises:
-    df_filtrado = df_filtrado[df_filtrado["country"].isin(paises)]
+df_filtrado = filter_by_countries(df1, paises)
 
 melhores_culinarias = (
     df_filtrado.groupby("cuisines", as_index=False)["aggregate_rating"]

@@ -1,8 +1,12 @@
 import plotly.express as px
 import streamlit as st
-from PIL import Image
 
-from data_processing import load_data
+from data_processing import (
+    country_multiselect,
+    filter_by_countries,
+    load_data,
+    render_sidebar_logo,
+)
 
 
 st.set_page_config(page_title="Countries", page_icon="🌎", layout="wide")
@@ -15,22 +19,11 @@ df1 = load_data()
 # Barra lateral no Streamlit
 # ============================================================
 
-image = Image.open("logo.png")
-st.sidebar.image(image, width=120)
-
-st.sidebar.markdown("# Filtros")
-
-paises = st.sidebar.multiselect(
-    "Escolha os países que deseja visualizar as informações",
-    sorted(df1["country"].unique()),
-)
-
+render_sidebar_logo()
+paises = country_multiselect(df1)
 st.sidebar.markdown("""---""")
 
-if paises:
-    df_filtrado = df1[df1["country"].isin(paises)]
-else:
-    df_filtrado = df1.copy()
+df_filtrado = filter_by_countries(df1, paises)
 
 
 # ============================================================
